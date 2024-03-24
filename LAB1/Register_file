@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;	--to use unsigned function
-USE ieee.numeric_std.ALL;		--to use to_integer function
+use IEEE.STD_LOGIC_UNSIGNED.ALL;	 --to use unsigned function
+USE ieee.numeric_std.ALL;		 --to use to_integer function
 
 entity RegFile is
     Port (
