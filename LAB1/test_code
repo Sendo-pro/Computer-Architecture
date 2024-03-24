@@ -1,0 +1,89 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;	
+USE ieee.numeric_std.ALL;		
+
+entity RegFile_tb is
+end RegFile_tb;
+
+architecture Behavioral of RegFile_tb is
+    -- Component Declaration for the DUT (Design Under Test)
+    component RegFile is
+        Port (
+            clk : in STD_LOGIC;
+            regWrite : in STD_LOGIC;
+            readReg1, readReg2, writeReg : in STD_LOGIC_VECTOR(4 downto 0);
+            writeData : in STD_LOGIC_VECTOR(31 downto 0);
+            dataOut1, dataOut2 : out STD_LOGIC_VECTOR(31 downto 0)
+        );
+    end component;
+
+    -- Test Bench Clock Signal
+    signal tb_clk: std_logic := '0';
+    constant CLK_PERIOD: time := 10 ns; -- Define the clock period (10 ns)
+
+    -- Test Bench Signals
+    signal tb_regWrite: std_logic := '0';
+    signal tb_readReg1, tb_readReg2, tb_writeReg: std_logic_vector(4 downto 0);
+    signal tb_writeData: std_logic_vector(31 downto 0);
+    signal tb_dataOut1, tb_dataOut2: std_logic_vector(31 downto 0);
+
+begin
+
+    -- Instantiate the DUT
+    DUT: RegFile port map (
+        clk => tb_clk,
+        regWrite => tb_regWrite,
+        readReg1 => tb_readReg1,
+        readReg2 => tb_readReg2,
+        writeReg => tb_writeReg,
+        writeData => tb_writeData,
+        dataOut1 => tb_dataOut1,
+        dataOut2 => tb_dataOut2
+    );
+
+        --tb_writeData <= (others => '1');
+      
+    -- Clock Process
+    tb_clk_process: process
+    begin
+        while now < 8*CLK_PERIOD loop  -- Run the clock for 80 ns
+            tb_clk <= '0';
+            wait for CLK_PERIOD / 2;
+            tb_clk <= '1';
+            wait for CLK_PERIOD / 2;
+        end loop;
+        wait;
+    end process;
+
+    -- Stimulus Process
+    RegWrite_process: process
+    begin
+        -- Stimulus for RegWrite
+	while now < 8*CLK_PERIOD loop  -- Run the clock for 80 ns
+        	tb_regWrite <= '1';
+        	wait for 40 ns;
+        	tb_regWrite <= '0';
+		wait for 40 ns;
+	end loop;
+	wait;
+    end process;
+    
+    Regs_process: process
+    begin
+        -- Stimulus for Read and Write Registers
+	tb_writeReg <= "00001";
+        tb_readReg1 <= "00001";
+        tb_readReg2 <= "00011";
+
+        -- Stimulus for Write Data
+	while now < 8*CLK_PERIOD loop  -- Run the clock for 80 ns
+		tb_writeData <= (others => '1');
+        	wait for 20 ns;
+        	tb_writeData <= (others => '0');
+		wait for 20 ns;
+	end loop;
+        wait;
+    end process;
+
+end Behavioral;
